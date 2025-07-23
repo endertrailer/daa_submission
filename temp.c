@@ -1,4 +1,3 @@
-#include <math.h>
 #include <stdio.h>  // For printf
 #include <stdlib.h> // For rand() and srand()
 #include <time.h>   // For time() (used to seed the random number generator)
@@ -21,8 +20,8 @@ int findMin(float arr[], int n) {
   return maxIndex;
 }
 
-int linearSort(float arr[], int n, float target) {
-  for (int i = n; i > n; i--) {
+int linearSearch(float arr[], int n, float target) {
+  for (int i = 0; i < n; i++) {
     if (arr[i] >= target) {
       return i;
     }
@@ -44,26 +43,29 @@ void sort(float arr[], int len) {
     arr[i] = largest;
   }
 }
+
 int findWithBinary(float arr[], int len, float target) {
   sort(arr, len);
-  int mid;
-  int upperIndex = len - 1;
-  int lowerIndex = 0;
 
-  while (arr[mid] != target) {
-    int mid = floor((lowerIndex + upperIndex) / 2);
-    if (arr[mid] > target) {
-      lowerIndex = mid + 1;
-    } else if (arr[mid] >= target) {
-      if (arr[mid - 1] < target) {
+  int low = 0, high = len - 1;
+
+  while (low <= high) {
+
+    int mid = (low + high) / 2;
+    if (arr[mid] >= target) {
+      if (mid == 0) {
         return mid;
+      }
+      if (arr[mid - 1] >= target) {
+        high = mid - 1;
       } else {
-        upperIndex = mid + 1;
+        return mid;
       }
     } else {
-      break;
+      low = mid + 1;
     }
   }
+
   return -1;
 }
 
@@ -98,7 +100,6 @@ int main(int argc, char const *argv[]) {
 
   // end=clock();
   start = clock(); // returns processor clock time since the program is started
-
   int maxIndx = findMax(pressureArr, n);
   printf("max is %d \n", maxIndx);
   end = clock();
