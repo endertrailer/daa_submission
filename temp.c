@@ -1,26 +1,57 @@
+#include <math.h>
 #include <stdio.h>  // For printf
 #include <stdlib.h> // For rand() and srand()
 #include <time.h>   // For time() (used to seed the random number generator)
 
 void generateDate(float arr[], int n, int min, int max) {
-  for (int i = 1; i < n; i++) {
+  for (int i = 0; i < n; i++) {
     arr[i] = min + ((float)rand() / RAND_MAX) * (max - min);
   }
 }
 
 int findMin(float arr[], int n) {
-  float min = arr[1];
-  int maxIndex = 1;
+  // float min = arr[1];
+  int minIndex = 1;
   for (int i = 1; i < n; i++) {
-    if (arr[i] > min) {
-      min = arr[i];
-      maxIndex = i;
+    if (arr[i] < arr[minIndex]) {
+      minIndex = i;
     }
   }
-  return maxIndex;
+  return minIndex;
 }
 
-int linearSearch(float arr[], int n, float target) {
+int findMinQuadratic(float arr[], int n) {
+  for (int i = 0; i < n; i++) {
+    int isMin = 1;
+    for (int j = 0; j < n; j++) {
+      if (arr[j] < arr[i]) {
+        isMin = 0;
+        break;
+      }
+    }
+    if (isMin) {
+      return i;
+    }
+  }
+  return 0;
+}
+
+float findMaxQuadratic(float arr[], int n) {
+  for (int i = 0; i < n; i++) {
+    int isMax = 1;
+    for (int j = 0; j < n; j++) {
+      if (arr[j] > arr[i]) {
+        isMax = 0;
+        break;
+      }
+    }
+    if (isMax) {
+      return i;
+    }
+  }
+  return 0;
+}
+int linearSearch(float arr[], int n, int target) {
   for (int i = 0; i < n; i++) {
     if (arr[i] >= target) {
       return i;
@@ -44,71 +75,93 @@ void sort(float arr[], int len) {
   }
 }
 
+int compare_floats(const void *a, const void *b) {
+  float fa = *(const float *)a;
+  float fb = *(const float *)b;
+  return (fa > fb) - (fa < fb);
+}
 int findWithBinary(float arr[], int len, float target) {
-  sort(arr, len);
-
+  qsort(arr, len, sizeof(float), compare_floats);
   int low = 0, high = len - 1;
 
   while (low <= high) {
-
     int mid = (low + high) / 2;
     if (arr[mid] >= target) {
       if (mid == 0) {
         return mid;
       }
-      if (arr[mid - 1] >= target) {
-        high = mid - 1;
-      } else {
+      if (arr[mid - 1] < target) {
         return mid;
+      } else {
+        high = mid - 1;
       }
     } else {
       low = mid + 1;
     }
   }
-
   return -1;
 }
 
 int findMax(float arr[], int n) {
-  float max = arr[1];
-  int minIndex = 1;
+  int maxIndex = 1;
   for (int i = 1; i < n; i++) {
-    if (arr[i] < max) {
-      max = arr[i];
-      minIndex = i;
-      printf("%f \n", arr[i]);
+    if (arr[i] > arr[maxIndex]) {
+      maxIndex = i;
     }
   }
-  printf("%f \n", arr[1]);
 
-  return minIndex;
+  return maxIndex;
 }
 int main(int argc, char const *argv[]) {
-  int n = 10001;
-  float arr[n];
+  int n = 1000000;
+  // clock_t start, end;
+  // double duration;
+  //
   float pressureArr[n];
+  generateDate(pressureArr, n, 950, 1050);
 
-  generateDate(arr, n, 21, 50);
-  generateDate(pressureArr, n, 951, 1050);
+  int minIndx;
+  int maxIndx;
   double duration;
-  clock_t start, end; // typedef of a numeric type: represent running time
-
-  // start = clock();  //returns processor clock time since the program is
-  // started
-
-  // int minIndx=findMin(arr,n);
-
-  // end=clock();
-  start = clock(); // returns processor clock time since the program is started
-  int maxIndx = findMax(pressureArr, n);
-  printf("max is %d \n", maxIndx);
+  clock_t start, end; // start = clock(); // returns processor clock time
+                      // since the program is started
+  start = clock();
+  maxIndx = findMax(pressureArr, n);
+  minIndx = findMin(pressureArr, n);
+  // printf("max is %d \n", maxIndx);
   end = clock();
   duration = (((double)(end - start)) /
               CLOCKS_PER_SEC); // no. of clock ticks per second
 
-  printf("For the input size=%d, Time required to find minimum value in a "
-         "list=%lf seconds\n",
-         n, duration);
+  printf("For the array size %d, Time required to find minimum and maximum in  "
+         "the temperature array using "
+         "linear Search "
+         "= %f seconds, the minimum value = %f and the maximum value = %f\n ",
+         n, duration, pressureArr[minIndx], pressureArr[maxIndx]);
 
+  start = clock();
+  maxIndx = findMaxQuadratic(pressureArr, n);
+  minIndx = findMinQuadratic(pressureArr, n);
+  printf("max is %d \n", minIndx);
+  end = clock();
+  duration = (((double)(end - start)) /
+              CLOCKS_PER_SEC); // no. of clock ticks per second
+
+  printf(
+      "\n For the array size %d, Time required to find minimum and maximum in "
+      "the pressure array using "
+      "quadratic Search "
+      "= %f seconds, the minimum value = %f and the maximum value = %f\n ",
+      n, duration, pressureArr[minIndx], pressureArr[maxIndx]);
+
+  float temperatureArr[n];
+  int num = 100000;
+  start = clock();
+  int firstAppreance = findWithBinary(pressureArr, num, 30);
+  end = clock();
+  duration = (((double)(end - start)) / CLOCKS_PER_SEC);
+  printf("first apperence %d, duration = %f, length of array = %d \n",
+         firstAppreance, duration, num);
+  generateDate(temperatureArr, n, 20, 50);
   return 1;
 }
