@@ -133,7 +133,7 @@ int main(int argc, char const *argv[]) {
   duration = (((double)(end - start)) /
               CLOCKS_PER_SEC); // no. of clock ticks per second
 
-  printf("For the array size %d, Time required to find minimum and maximum in  "
+  printf("For the array size %d, Time required to find minimum and maximum in "
          "the temperature array using "
          "linear Search "
          "= %f seconds, the minimum value = %f and the maximum value = %f\n ",
@@ -142,26 +142,37 @@ int main(int argc, char const *argv[]) {
   start = clock();
   maxIndx = findMaxQuadratic(pressureArr, n);
   minIndx = findMinQuadratic(pressureArr, n);
-  printf("max is %d \n", minIndx);
   end = clock();
   duration = (((double)(end - start)) /
               CLOCKS_PER_SEC); // no. of clock ticks per second
 
   printf(
-      "\n For the array size %d, Time required to find minimum and maximum in "
+      "\nFor the array size %d, Time required to find minimum and maximum in "
       "the pressure array using "
       "quadratic Search "
-      "= %f seconds, the minimum value = %f and the maximum value = %f\n ",
+      "= %f seconds, the minimum value = %f and the maximum value = %f\n \n",
       n, duration, pressureArr[minIndx], pressureArr[maxIndx]);
 
   float temperatureArr[n];
-  int num = 100000;
+  int firstAppreance;
+
+  generateDate(temperatureArr, n, 20, 50);
   start = clock();
-  int firstAppreance = findWithBinary(pressureArr, num, 30);
+  firstAppreance = linearSearch(temperatureArr, n, 30);
   end = clock();
   duration = (((double)(end - start)) / CLOCKS_PER_SEC);
-  printf("first apperence %d, duration = %f, length of array = %d \n",
-         firstAppreance, duration, num);
-  generateDate(temperatureArr, n, 20, 50);
+  printf("first apperence index with linear %d, duration = %f, length of array"
+         "= %d \n \n",
+         firstAppreance, duration, n);
+
+  start = clock();
+
+  firstAppreance = findWithBinary(temperatureArr, n, 30);
+  end = clock();
+  duration = (((double)(end - start)) / CLOCKS_PER_SEC);
+  printf(
+      "first apperence with binary %d, duration = %f, length of array = %d \n",
+      firstAppreance, duration, n);
+
   return 1;
 }
