@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+int profitByWeight(int weight[50], int progit[50]) {}
 struct Box {
   int weight;
   int profit;
@@ -40,6 +41,8 @@ int main(int argc, char *argv[]) {
                     85,  189, 274, 43,  33,  10,  19,  389, 276, 312};
   struct Box arr[50];
   int capacity = 850;
+  int filled = 0;
+  int finalProfit = 0;
   for (int i = 0; i < 50; i++) {
     arr[i].weight = weight[i];
     arr[i].profit = profit[i];
@@ -47,8 +50,14 @@ int main(int argc, char *argv[]) {
   qsort(arr, n, sizeof(arr[0]), compProfit);
 
   for (int i = 0; i < 50; i++) {
-    printf("%d ", arr[i].profit);
-    printf("%d \n", arr[i].weight);
+    if (arr[i].weight + filled > capacity) {
+      break;
+    }
+    finalProfit = finalProfit + arr[i].profit;
+    filled += arr[i].weight;
   }
+  printf("%d \n", filled);
+
+  printf("%d \n", finalProfit);
   return 1;
 }
