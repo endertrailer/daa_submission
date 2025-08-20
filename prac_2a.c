@@ -39,9 +39,8 @@ int main(void) {
   qsort(arr, n, sizeof(arr[0]), comp);
   int count = activitySelection(n, arr, selected, &totalProfit);
 
-  printf("Selected activities: ");
   for (int i = 0; i < count; i++) {
-    printf("%d ", arr[selected[i]].name);
+    printf("A%d ", arr[selected[i]].name);
   }
   printf("\nTotal Profit = %d\n", totalProfit);
 
